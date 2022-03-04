@@ -16,6 +16,7 @@ const Country: FunctionComponent<ICountryProps> = (props) => {
     }
     return (
         <>
+        
                 <tr>
                     <td>                   
                         <Image src={country.flags.png} className='img-fluid' />
@@ -30,7 +31,6 @@ const Country: FunctionComponent<ICountryProps> = (props) => {
                         <button onClick={() =>fncGotoDetail(country.name.official)} type='button' className='btn btn-outline-danger'>Detail</button>
                     </td>
                 </tr>
-            
         </>
     )
 }

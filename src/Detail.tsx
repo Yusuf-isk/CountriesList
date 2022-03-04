@@ -1,42 +1,64 @@
+import { count } from 'console';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import { CountryObject } from './type'
-import { CountryDetails } from './Util';
+import CountryDetail from './components/CountryDetail'
+import { CountryDetails } from './actions';
+import { connect } from 'react-redux';
 
-function Detail() {
-    const [country, setCountry] = useState<CountryObject>();
+function Detail(props: { CountryDetails: (arg0: string) => void; country: CountryObject[]; }) {
+    // const [country, setCountry] = useState<CountryObject[]>([]);
     const { name } = useParams();
     useEffect(() => {
-        
+
         try {
-            CountryDetails(name!).then(res => {
-                const dt: CountryObject = res.data;
-                setCountry(dt);
-            });
+            // CountryDetails(name!).then(res => {
+            //     const dt:CountryObject[] = res.data;
+            //     setCountry(dt);
+            // });
+            props.CountryDetails(name!)
+
+           
+            
         } catch (error) {
             console.log('Network Error' + error)
         }
     }, [])
-    
-    console.log('countriy', country)
+
+    console.log('countriy', props.country)
 
     return (
         <div className='container-sm-fluid px-4'>
             <div className='row'>
-            {!country ? <div>Hata oluştu</div> :
-                <div className='card card-fluid' style={{ marginTop: "20px" }}>
-                    <div className='col'>
-                        <p style={{marginTop:"10px", width: "30%", border: "2px solid", borderRadius: "5px" }}>Hosgeldiniz {country?.capital}</p>
-                        <div>{country?.currencies}</div>
-                        <div>{country?.name}</div>
-                    </div>
-                    <div className='col'>
-                        <p>Merhaba</p>
-                    </div>
-                </div>}
+                <div>
+                    {
+                        props.country.map((item, index) => {
+                            return (
+                                <CountryDetail key={index} country={item} />
+                            );
+                        })}
+
+                    {/* <div className='card card-fluid' style={{ marginTop: "20px" }}>
+                        <div className='col'>
+                           <img src={country[0].flags.png} />
+                        </div>
+                        <div className='col'>
+                            <p>Merhaba</p>
+                        </div>
+
+                    </div> */}
+
+                </div>
 
             </div>
         </div>
     )
 }
-export default Detail;
+
+const mapStateToProps = (state: { country: any; }) => {
+    return{
+    country:state.country
+}
+}
+
+export default connect(mapStateToProps,{CountryDetails})(Detail);
